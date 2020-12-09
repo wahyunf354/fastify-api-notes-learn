@@ -4,7 +4,7 @@ const appConfig = require('../config/appConfig.js')
 
 module.exports = fp(async function (fastify, opts) {
   const db = pgp(appConfig.postgresUri)
-
+ 
   fastify.decorate('db', db)
 })
  
