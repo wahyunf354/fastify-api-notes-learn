@@ -1,6 +1,5 @@
 "use strict";
 const NotesDAL = require("./notesDAL.js");
-
 module.exports = async function (fastify, opts) {
   const notesDAL = NotesDAL(fastify.db);
 
@@ -16,7 +15,7 @@ module.exports = async function (fastify, opts) {
           items: {
             type: "object",
             properties: {
-              id: { type: "string", description: "unique a value" },
+              id: { type: "number", description: "unique a value" },
               title: { type: "string" },
               body: { type: "string", description: "Main content from note" },
             },
@@ -25,7 +24,7 @@ module.exports = async function (fastify, opts) {
       },
     },
     handler: async (request, reply) => {
-      return [];
+      return notesDAL.getNotes();
     },
   });
 
@@ -57,7 +56,6 @@ module.exports = async function (fastify, opts) {
     },
     handler: async (request, reply) => {
       const { title, body } = request.body;
-
       const newNotes = await notesDAL.createNote(title, body);
 
       return newNotes;
@@ -97,7 +95,12 @@ module.exports = async function (fastify, opts) {
       },
     },
     handler: async (request, reply) => {
-      return [];
+      const { id } = request.params;
+      const { title, body } = request.body;
+
+      const resultUpdateNote = await notesDAL.updateNote(id, title, body);
+
+      return resultUpdateNote;
     },
   });
 
@@ -119,7 +122,11 @@ module.exports = async function (fastify, opts) {
       },
     },
     handler: async (request, reply) => {
-      return;
+      const { id } = request.params;
+
+      await notesDAL.deleteNote(id);
+
+      reply.status(204);
     },
   });
 };
