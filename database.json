@@ -1,0 +1,6 @@
+{
+  "dev": {
+    "ENV": "POSTGRES_URI"
+  },
+  "slq-file": true
+}

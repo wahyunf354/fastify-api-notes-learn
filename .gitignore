@@ -57,5 +57,8 @@ profile*
 *clinic*
 *flamegraph*
 
+# docker valume
+data
+
 *.un~
 .env
