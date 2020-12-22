@@ -1,15 +1,13 @@
+function loadConfigFromEnv(key) {
+  const varEnv = process.env[key];
 
-function loadConfigFromEnv (key) {
-  const varEnv = process.env[key]
-
-  if(!varEnv) {
-    throw new Error(`mush be have a variable ${key} in env.`)
+  if (!varEnv) {
+    throw new Error(`mush be have a variable ${key} in env.`);
   }
 
-  return varEnv
+  return varEnv;
 }
-
 
 module.exports = {
-  postgresUri: loadConfigFromEnv('POSTGRES_URI')
-}
+  postgresUri: loadConfigFromEnv("POSTGRES_URI"),
+};

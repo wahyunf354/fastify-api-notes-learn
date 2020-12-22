@@ -1,4 +1,9 @@
+/* eslint-disable no-undef */
 const fastify = require("fastify");
+const app = require("../app");
+const fp = require("fastify-plugin");
+
+const clearDatabaseSql = "DELETE FROM notes;";
 
 module.exports = function setupEnvironmentTest() {
   // setup environment test
@@ -14,6 +19,23 @@ module.exports = function setupEnvironmentTest() {
   });
 
   // setup test lifecycle hooks
-  beforeAll();
+  beforeAll(async () => {
+    server.register(fp(app));
+    await server.ready();
+    await server.db.query(clearDatabaseSql);
+  });
+
+  beforeEach(async () => {
+    await server.db.query(clearDatabaseSql);
+  });
+
+  afterEach(async () => {
+    await server.db.query(clearDatabaseSql);
+  });
+
+  afterAll(async () => {
+    await server.close();
+  });
   // return our fastify server
+  return server;
 };

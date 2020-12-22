@@ -14,21 +14,25 @@ function runMigration() {
         return reject(error);
       }
 
-      if (result.length > 0) {
-        return resolve(result);
-      }
+      return resolve(result);
     });
   });
 }
 
-module.exports = fp(async function (fastify, opts) {
+module.exports = fp(async function (fastify) {
   const db = pgp(appConfig.postgresUri);
 
-  fastify.decorate("db", db);
-  const migrationsRan = await runMigration();
-
-  fastify.log.info({
-    migrationCount: migrationsRan.length,
-    msg: "Successfull migration run",
+  fastify.decorate("db", db).addHook("onClose", async (instance, done) => {
+    await db.$pool.end();
+    done();
   });
+
+  const migrationResult = await runMigration();
+
+  if (migrationResult.length > 0) {
+    fastify.log.info({
+      migrationCount: migrationResult.length,
+      msg: "Successful migrations run",
+    });
+  }
 });

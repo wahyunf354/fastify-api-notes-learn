@@ -1,4 +1,4 @@
-module.exports = async function (fastify, opts) {
+module.exports = async function (fastify) {
   fastify.route({
     method: "GET",
     url: "/",
@@ -15,7 +15,7 @@ module.exports = async function (fastify, opts) {
         },
       },
     },
-    handler: async (request, reply) => {
+    handler: async () => {
       return { status: "OK", timestamp: new Date().toISOString() };
     },
   });
